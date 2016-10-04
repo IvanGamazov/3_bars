@@ -9,35 +9,50 @@ def load_data(filepath):
 
 
 def get_biggest_bar(data):
+    biggest_bars = []
     maxseats = max(data, key=lambda d: d['Cells']['SeatsCount'])
-    for x in data:
-        if x['Cells']['SeatsCount'] == maxseats['Cells']['SeatsCount']:
-            pprint(x)
+    for bar in data:
+        if bar['Cells']['SeatsCount'] == maxseats['Cells']['SeatsCount']:
+            biggest_bars.append(bar['Cells']['Name'])
+    return biggest_bars
 
 
 def get_smallest_bar(data):
+    smallest_bars = []
     minseats = min(data, key=lambda d: d['Cells']['SeatsCount'])
-    for x in data:
-        if x['Cells']['SeatsCount'] == minseats['Cells']['SeatsCount']:
-            pprint(x)
+    for bar in data:
+        if bar['Cells']['SeatsCount'] == minseats['Cells']['SeatsCount']:
+            smallest_bars.append(bar['Cells']['Name'])
+    return smallest_bars
 
 
 def get_closest_bar(data, longitude, latitude):
-    nearest_bar = min(data, key=lambda x:((x['Cells']['geoData']['coordinates'][0] - longitude)**2 + (x['Cells']['geoData']['coordinates'][1] - latitude)**2))
-    pprint(nearest_bar)
+    nearest_bar = min(data, key=lambda bar: (
+        (bar['Cells']['geoData']['coordinates'][0] - longitude) ** 2
+        + (bar['Cells']['geoData']['coordinates'][1] - latitude) ** 2
+    )
+                      )
+    return nearest_bar['Cells']['Name']
 
 
 def main():
     filepath = input("Enter data file name --> ")
     data = load_data(filepath)
     pprint('--------------------Smallest Bars---------------------')
-    get_smallest_bar(data)
+    smallest_bars =  get_smallest_bar(data)
+    for bar in smallest_bars:
+        print(bar)
+
     pprint('--------------------Biggest Bars---------------------')
-    get_biggest_bar(data)
+    biggest_bars = get_biggest_bar(data)
+    for bar in biggest_bars:
+        print(bar)
+
     pprint('--------------------Closest Bar---------------------')
     longitude = input("Enter your longitude --> ")
     latitude = input("Enter your latitude --> ")
-    get_closest_bar(data, float(longitude), float(latitude))
+    nearest_bar = get_closest_bar(data, float(longitude), float(latitude))
+    print(nearest_bar)
 
 
 if __name__ == '__main__':
